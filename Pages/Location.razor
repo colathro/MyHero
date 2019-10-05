@@ -1,0 +1,38 @@
+@page "/location"
+@inject IJSRuntime JSRuntime
+
+<h1>Location</h1>
+<div class="pac-card" id="pac-card">
+  <div>
+    <div id="title">
+      Autocomplete search
+    </div>
+  </div>
+  <div id="pac-container">
+    <input id="pac-input" type="text"
+        placeholder="Enter a location">
+    <div id="coordinates">
+      <span id="latlong">Hello</span>
+    </div>
+    <div>
+        <span id="address"></span>
+    </div>
+  </div>
+</div>
+
+<button @onclick="Submit">Submit</button>
+@code {
+    private void Submit()
+    {
+        Console.WriteLine("Submited");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var text = await JSRuntime.InvokeAsync<string>("initMap");
+            Console.WriteLine("Submited");
+        }
+    }
+}
