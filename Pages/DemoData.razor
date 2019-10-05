@@ -4,7 +4,6 @@
 @using MyHero.Data.Demo
 @inject ApplicationDbContext _context
 
-<h1>@_context.SampleDataEntity.Single().Name</h1>
 <button @onclick=@(() => test(_context))>Don't Press</button>
 
 @code{
