@@ -1,5 +1,7 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@using MyHero.Data
+@inject ApplicationDbContext _context
 
-Welcome to your new app.
+<h1>@_context.SampleDataEntity.Single().Name</h1>
+

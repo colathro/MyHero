@@ -12,5 +12,14 @@ namespace MyHero.Data
             : base(options)
         {
         }
+
+        public DbSet<SampleDataEntity> SampleDataEntity { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<SampleDataEntity>().ToTable("SampleDataEntity");
+
+            base.OnModelCreating(builder);
+        }
     }
 }
