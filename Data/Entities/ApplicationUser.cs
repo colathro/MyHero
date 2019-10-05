@@ -9,6 +9,8 @@ namespace MyHero.Data
 {
     public class ApplicationUser : IdentityUser
     {
-        public string CustomTag { get; set; }
+        public Requestor Requestor { get; set; }
+
+        public Hero Hero { get; set; }
     }
 }
