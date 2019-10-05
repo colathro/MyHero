@@ -3,5 +3,19 @@
 @using MyHero.Data
 @inject ApplicationDbContext _context
 
-<h1>@_context.SampleDataEntity.Single().Name</h1>
+<AuthorizeView>
+    <Authorized>
+        <h1>Hello, @test(context)!</h1>
+        You can only see this if you're authenticated.
+    </Authorized>
+    <NotAuthorized>
+        You're not logged in.
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    public string test (AuthenticationState _context) {
+        return _context.User.Identity.Name;
+    }
+}
 
