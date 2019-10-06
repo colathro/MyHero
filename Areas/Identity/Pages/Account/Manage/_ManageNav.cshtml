@@ -1,11 +1,26 @@
 @using MyHero.Data; 
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> _userManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var _user = await _userManager.GetUserAsync(User);
 }
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
+    @if(_user.UserType != null && _user.UserType.Equals("Hero"))
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Hero Profile</a></li>
+    }
+    else if(_user.UserType != null && _user.UserType.Equals("Requestor"))
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.UserProfileNavClass(ViewContext)" id="profile" asp-page="./UserProfile">Profile</a></li>
+    
+    }
+    else if(_user.UserType != null && _user.UserType.Equals("RequestorHero"))
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Hero Profile</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.UserProfileNavClass(ViewContext)" id="profile" asp-page="./UserProfile">User Profile</a></li>
+    }
     @if (hasExternalLogins)
     {
         <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>

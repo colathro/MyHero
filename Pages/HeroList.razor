@@ -15,7 +15,7 @@
 
 <div class="container">
 
-    <div class="row">
+    <div class="row m-3">
         <div class="col-lg-10">
             <input type="text" placeholder="Search.." @bind="this.Codename" />
             <button class="btn btn-primary" type="button" @onclick="SearchHeroes">Search</button>
@@ -46,7 +46,7 @@
                                 <small class="text-muted">@GetSomeRawHtml()</small>
                             </div>                            
                             <div class="btn-group">
-                                <button class="btn btn-success" @onclick="() => SendRequest(hero.Id)">Send Request</button>
+                                <button class="btn btn-outline-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
                             </div>
                             
                         </div>
@@ -79,7 +79,7 @@
         int x = rand.Next(5);
 
         string output = "";
-        for (int ctr = 0; ctr <= x; ctr++)
+        for (int ctr = 0; ctr <= x-1; ctr++)
         {
             output += "★";
         }

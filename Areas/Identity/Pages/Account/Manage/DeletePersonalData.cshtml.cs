@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using MyHero.Data;
+using MyHero.Controllers;
 
 namespace MyHero.Areas.Identity.Pages.Account.Manage
 {
@@ -14,15 +15,19 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        
+        private ApplicationDbContext _dbContext;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger,
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _dbContext = dbContext;
         }
 
         [BindProperty]
@@ -66,6 +71,9 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
+
+            UserController con = new UserController(_dbContext);
+            con.deleteHeroRequestor(user);
 
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
