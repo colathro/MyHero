@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace MyHero.Controllers
 {
@@ -82,15 +83,22 @@ namespace MyHero.Controllers
             }
         }
 
-        public Task<bool> SendRequest(int heroId)
+        public Task<bool> SendRequest(int requesterId, int heroId)
         {
-            //var request = new Request()
-            //{
-            //    Requestor = new Requestor()
-            //    {
-            //        r
-            //    }
-            //}
+            var requester = dbcontext.Requestor.Include(r => r.User).Where(r => r.Id == requesterId).FirstOrDefault();
+            var hero = dbcontext.Hero.Include(h => h.User).Where(h => h.Id == heroId).FirstOrDefault();
+
+            var request = new Request()
+            {
+                Requestor = requester,
+                Hero = hero,
+                DateRequested = DateTime.Now,
+                Status = 0,
+                Description = "Test Description"
+            };
+
+            dbcontext.Request.Add(request);
+            dbcontext.SaveChanges();
 
             return Task.FromResult(true);
         }
