@@ -1,0 +1,77 @@
+﻿@page "/HeroProfile/{Id}"
+
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using MyHero.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@using MyHero.Controllers
+
+<AuthorizeView>
+    <Authorized>
+    @{ test(context.User); }
+    <div class="container mt-4">
+      <div class="row">
+          <div class="col-8">
+              <h1>Hi, I'm Colton. @context.User.Identity.Name</h1>
+              <br />
+              <h6>Member Since 2019</h6>
+              <br />
+
+              <p>
+                  I love to code and I work for Microsoft. I love to eat TacoBell and shit my pants.
+                  I'm an avid cycling, and even race; but have yet to win. I like to compete in hack-
+                  athons to test my coding ability and have fun with friends. Please let me touch your
+                  children.
+              </p>
+              <br/>
+              <h4>Photos</h4>
+              <div class="container">
+                  <div class="row">
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
+                      </div>
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
+                      </div>
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
+                      </div>
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
+                      </div>
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
+                      </div>
+                  </div>
+              </div>
+              <br />
+          </div>
+          <div class="col-4">
+              <div class="container rounded bg-white mt-4">
+                  <div class="d-flex justify-content-center">
+                    <img class="rounded-circle m-4" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="150px" width="150px" />
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    </Authorized>
+</AuthorizeView>
+
+@functions {
+    [Parameter]
+    public string Id { get; set; }
+
+    public async void test(ClaimsPrincipal cp)
+    {
+        ApplicationUser ap = await UserManager.GetUserAsync(cp);
+        var x = "test";
+    }
+}
