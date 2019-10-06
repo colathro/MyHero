@@ -24,4 +24,8 @@
   <ItemGroup>
     <Folder Include="Data\Entities\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\HeroModel.cs" />
+    <Compile Remove="Models\RequesterModel.cs" />
+  </ItemGroup>
 </Project>

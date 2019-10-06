@@ -1,12 +1,12 @@
 ﻿@page "/"
 
 @using MyHero.Data
+@using MyHero.Controllers
 @inject ApplicationDbContext _context
 
 <AuthorizeView>
     <Authorized>
-        <h1>Hello, @test(context)!</h1>
-        You can only see this if you're authenticated.
+        @test(_context)
     </Authorized>
     <NotAuthorized>
         You're not logged in.
@@ -14,8 +14,14 @@
 </AuthorizeView>
 
 @code {
-    public string test (AuthenticationState _context) {
-        return _context.User.Identity.Name;
+
+    public string teststr = "be43881f-6051-49e6-8e54-8a62c71cd59c";
+
+    public string test (ApplicationDbContext _context) {
+        UserController con = new UserController(_context);
+        Hero hero = con.GetHero(this.teststr);
+        Requestor req = con.GetRequestor(this.teststr);
+        return hero.Location;
     }
 }
 

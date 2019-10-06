@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MyHero.Data;
+using Microsoft.EntityFrameworkCore;
 using MyHero.Models;
 using System;
 using System.Collections.Generic;
@@ -11,20 +12,22 @@ namespace MyHero.Controllers
     public class UserController 
     {
         private ApplicationDbContext dbcontext;
+
         public UserController(ApplicationDbContext _dbcontext)
         {
             dbcontext = _dbcontext;
         }
-        public Task<RequesterModel> GetRequesterAsync(int requesterId)
+
+        public Requestor GetRequestor(string _userid)
         {
-            var requester = dbcontext.Requestor.Where(r =>  r.Id == requesterId).Select(r => new RequesterModel()).FirstOrDefault();
-            return Task.FromResult(requester);
+            var req = dbcontext.User.Where(r => r.Id == _userid).Include(e => e.Requestor).FirstOrDefault();
+            return req.Requestor;
         }
 
-        public Task<RequesterModel> GetHeroAsync(int heroId)
+        public Hero GetHero(string _userid)
         {
-            var requester = dbcontext.Hero.Where(r => r.Id == heroId).Select(r => new RequesterModel()).FirstOrDefault();
-            return Task.FromResult(requester);
+            var hero = dbcontext.User.Where(r => r.Id == _userid).Include(e => e.Hero).FirstOrDefault();
+            return hero.Hero;
         }
     }
 }
