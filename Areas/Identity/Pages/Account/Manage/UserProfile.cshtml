@@ -27,8 +27,8 @@
                     <label asp-for="Input.Location"></label>
                     <input id="pac-input" asp-for="Input.Location" class="form-control" />
                     <br />
-                    <input asp-for="Input.Latitude" class="form-control" id="latitude"/>
-                    <input asp-for="Input.Longitude"class="form-control"id="longitude"/>
+                    <input type="hidden" asp-for="Input.Latitude" class="form-control" id="latitude"/>
+                    <input type="hidden" asp-for="Input.Longitude"class="form-control"id="longitude"/>
                     <label asp-for="Input.Description"></label>
                     <textarea asp-for="Input.Description" class="form-control"></textarea>
                     <br />
