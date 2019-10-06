@@ -6,8 +6,6 @@
 @using MyHero.Data
 
 @inject UserManager<ApplicationUser> UserManager
-@inject ApplicationDbContext _context
-
 @using MyHero.Controllers
 
 <AuthorizeView>
@@ -16,7 +14,7 @@
     <div class="container mt-4">
       <div class="row">
           <div class="col-8">
-              <h1>Hi, I'm Colton. </h1>
+              <h1>Hi, I'm Colton. @context.User.Identity.Name</h1>
               <br />
               <h6>Member Since 2019</h6>
               <br />
@@ -29,44 +27,36 @@
               </p>
               <br/>
               <h4>Photos</h4>
-              <div class="container-fluid">
+              <div class="container">
                   <div class="row">
-                      <div class="col-sm col-md-4 mb-4">
-                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" />
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
                       </div>
-                      <div class="col-sm col-md-4 mb-4">
-                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" />
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
                       </div>
-                      <div class="col-sm col-md-4 mb-4">
-                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp"  />
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
                       </div>
                   </div>
                   <div class="row">
-                      <div class="col-sm col-md-4 mb-4">
-                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp"  />
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
                       </div>
-                      <div class="col-sm col-md-4 mb-4">
-                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp"  />
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
                       </div>
-                      <div class="col-sm col-md-4 mb-4">
-                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" />
+                      <div class="col col-md-4 mb-4">
+                          <img class="img-fluid rounded" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="75px" width="150px" />
                       </div>
                   </div>
               </div>
               <br />
           </div>
           <div class="col-4">
-              <div class="container-fluid rounded bg-white mt-4">
-                  <div class="row-fluid">
-                      <div class="d-flex justify-content-center">
-                    <img class="img-fluid rounded-circle m-4" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="150px" width="150px" />
-                      </div>
-                  </div>
-                  <div class="row-fluid">
-                      <div class="d-flex justify-content-center">
-                          <button type="button" class="btn btn-outline-primary">Request</button>
-                          <button type="button" class="btn btn-outline-danger">Report</button>
-                      </div>
+              <div class="container rounded bg-white mt-4">
+                  <div class="d-flex justify-content-center">
+                    <img class="rounded-circle m-4" src="https://animemotivation.com/wp-content/uploads/2018/02/cute-anime-girl.jpg.webp" height="150px" width="150px" />
                   </div>
               </div>
           </div>
@@ -78,8 +68,6 @@
 @functions {
     [Parameter]
     public string Id { get; set; }
-
-    public HeroController con;
 
     public async void test(ClaimsPrincipal cp)
     {
