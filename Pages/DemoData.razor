@@ -1,0 +1,15 @@
+﻿@page "/DemoData"
+
+@using MyHero.Data
+@using MyHero.Data.Demo
+@inject ApplicationDbContext _context
+
+<button @onclick=@(() => test(_context))>Don't Press</button>
+
+@code{
+    public void test(ApplicationDbContext _context){
+        demo d = new demo(_context);
+        d.init();
+    }
+}
+

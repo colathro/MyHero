@@ -13,6 +13,7 @@ namespace MyHero.Data
         {
         }
 
+        public DbSet<ApplicationUser> User { get; set; }
         public DbSet<SampleDataEntity> SampleDataEntity { get; set; }
         public DbSet<Photos> Photos { get; set; }
         public DbSet<HeroPhotos> HeroPhotos { get; set; }
