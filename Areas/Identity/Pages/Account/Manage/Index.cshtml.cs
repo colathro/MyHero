@@ -86,11 +86,16 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            if (user.UserType is null)
+            {
+                return RedirectToPage("./ProfileSetup");
+            }
+
             await LoadAsync(user);
 
             UserController con = new UserController(_dbContext);
 
-            con.PopulateHeroRequestor(user);
+            con.PopulateHeroRequestor(user, user.UserType.Contains("Hero"), user.UserType.Contains("Requestor"));
 
             this.GetUserSettings(user);
 

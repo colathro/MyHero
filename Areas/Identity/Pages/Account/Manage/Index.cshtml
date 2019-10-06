@@ -11,7 +11,7 @@
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        @if (_user.UserType == "Hero")
+        @if (_user.UserType.Contains("Hero"))
         {
         <form id="profile-form" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -43,7 +43,7 @@
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>
         }
-        else
+        @if (_user.UserType.Contains("Requestor"))
         {
             <form id="profile-form" method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
@@ -57,7 +57,6 @@
                     <br />
                     <label asp-for="Input.Description"></label>
                     <textarea asp-for="Input.Description" class="form-control"></textarea>
-
                     <br />
                 </div>
                 <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
