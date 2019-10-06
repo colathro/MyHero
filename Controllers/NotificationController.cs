@@ -48,7 +48,7 @@ namespace MyHero.Controllers
         {
             var builder = new BodyBuilder();
 
-            var image = builder.LinkedResources.Add(@"C:\Projects\MyHero\TempFiles\hero1.jpg");
+            var image = builder.LinkedResources.Add("https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg");
             image.ContentId = MimeUtils.GenerateMessageId();
 
             builder.HtmlBody = string.Format(@"<p>Hey Alice,<br>
@@ -65,7 +65,7 @@ namespace MyHero.Controllers
         {
             var builder = new BodyBuilder();
 
-            var image = builder.LinkedResources.Add(@"C:\Projects\MyHero\TempFiles\hero1.jpg");
+            var image = builder.LinkedResources.Add("https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg");
             image.ContentId = MimeUtils.GenerateMessageId();
 
             builder.HtmlBody = string.Format(@"<p>Hey Alice,<br>
