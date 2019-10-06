@@ -1,7 +1,6 @@
 ﻿@using MyHero.Data
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.ViewEngines
-@using MyHero.Pages.Shared
 @using Microsoft.EntityFrameworkCore;
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
@@ -13,12 +12,12 @@
     var navbarHeroList = "/herolist/";
     var navbarUserRequests = "/userrequests/";
     var navbarHeroRequests = "/herorequests/";
-    if(_requestor != null)
+    if (_requestor != null)
     {
         navbarHeroList += _requestor.Id.ToString();
         navbarUserRequests += _requestor.Id.ToString();
     }
-    if(_hero != null)
+    if (_hero != null)
     {
         navbarHeroRequests += _hero.Id.ToString();
     }
@@ -55,23 +54,29 @@
                         <li class="nav-item active">
                             <a class="nav-link" href=@navbarHeroList>Hero List</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dropdown link
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="nav-link" href=@navbarHeroList>My Hero Requests</a>
-                                <a class="nav-link" href=@navbarHeroList>Hero List</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
-                        </li>
+                        @if (_requestor != null || _hero != null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Dropdown link
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    @if (_requestor != null)
+                                    {
+                                        <a class="nav-link" href=@navbarUserRequests>My Requests</a>
+                                    }
+                                    @if (_hero != null)
+                                    {
+                                        <a class="nav-link" href=@navbarHeroRequests>My Hero Requests</a>
+                                    }
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     @{
-var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
+                        var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
                     }
                     @if (result.Success)
                     {
