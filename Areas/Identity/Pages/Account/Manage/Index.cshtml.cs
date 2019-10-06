@@ -82,10 +82,6 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
 
             await LoadAsync(user);
 
-            UserController con = new UserController(_dbContext);
-
-            con.PopulateHeroRequestor(user);
-
             this.GetUserSettings(user);
 
             return Page();
@@ -120,10 +116,6 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
-        }
-
-        public void DefaultHeroRequestor()
-        {
         }
 
         public void SetUserSettings(ApplicationUser _user)

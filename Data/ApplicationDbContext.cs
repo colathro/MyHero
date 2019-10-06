@@ -28,8 +28,6 @@ namespace MyHero.Data
 
             builder.Entity<HeroPhotos>().ToTable("HeroPhotos");
 
-            builder.Entity<Request>().ToTable("Requests");
-
             builder.Entity<Hero>()
                 .HasMany(c => c.HeroPhotos)
                 .WithOne(e => e.Hero);
@@ -45,7 +43,6 @@ namespace MyHero.Data
                 .HasForeignKey<Requestor>();
             builder.Entity<Requestor>()
                 .ToTable("Requestor");
-
 
             base.OnModelCreating(builder);
         }
