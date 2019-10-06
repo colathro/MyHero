@@ -7,6 +7,13 @@
 @using Microsoft.AspNetCore.Identity
 @using MyHero.Models
 @using Microsoft.Extensions.Options
+@using Microsoft.EntityFrameworkCore;
+@using MyHero.Models;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Threading.Tasks;
+@using Microsoft.Extensions.Options;
 @inject ApplicationDbContext dbcontext;
 @inject UserManager<ApplicationUser> UserManager
 @inject IOptions<NotificationSettings> notificationSettings;
@@ -60,20 +67,18 @@
 
 @code {
 
+    ApplicationUser user;
     List<Hero> Heroes;
     string Codename;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await GetHeroes();
-        }
+        await GetHeroes();
     }
 
     public async void test(ClaimsPrincipal cp)
     {
-        ApplicationUser user1 = await UserManager.GetUserAsync(cp);
+        user = dbcontext.User.Include(u => u.Requestor).Where(u => u.Email == cp.Identity.Name).FirstOrDefault();
     }
 
     private async Task SendRequest(int heroId)
@@ -97,7 +102,7 @@
     {
         var heroCount = new HeroController(dbcontext, notificationSettings);
 
-        //Heroes = heroCount.GetHeros(user);
+        Heroes = heroCount.GetHeros(user);
     }
 
 }
