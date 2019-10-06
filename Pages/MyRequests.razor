@@ -1,114 +1,146 @@
-﻿@page "/herolist"
+@page "/myrequests"
+
 
 @using MyHero.Controllers
 @using MyHero.Data
-@inject NotificationController Notification
+@using MyHero.Models
+@using Microsoft.Extensions.Options
+@inject ApplicationDbContext dbcontext;
+@inject IOptions<NotificationSettings> notificationSettings;
 
 <div class="container">
 
-    <div class="row">
-        <div class="col-lg-10">
-            <input type="text" placeholder="Search.." @bind="this.Codename" />
-            <button class="btn btn-primary" type="button" @onclick="SearchHeroes">Search</button>
-            <button class="btn btn-secondary" type="button" @onclick="ClearSeach">Clear</button>
-        </div>
-    </div>
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Accepted Requests
+                    </button>
+                </h2>
+            </div>
 
-    <div class="row">
-        @foreach (var hero in Heroes)
-        {
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100">
-                    <a href="#"><img class="card-img-top" src="https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg" alt=""></a>
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            <a href="#">@hero.User.UserName</a>
-                        </h4>
-                        <h5>@hero.Tags</h5>
-                        <p class="card-text">@hero.Description</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        <button class="btn btn-primary" @onclick="SendEmail">Send Email</button>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var request in AcceptedRequests)
+                        {
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            @request.Requestor.User.UserName
+                                        </h4>
+                                        <p class="card-text">@request.Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                        <button class="btn btn-primary" @onclick="() => AcceptRequest(request.Id)">Accept</button>
+                                        <button class="btn btn-primary" @onclick="() => DeclineRequest(request.Id)">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
-        }
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Pending Requests
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var request in PendingRequests)
+                        {
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            @request.Requestor.User.UserName
+                                        </h4>
+                                        <p class="card-text">@request.Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                        <button class="btn btn-primary" @onclick="() => AcceptRequest(request.Id)">Accept</button>
+                                        <button class="btn btn-primary" @onclick="() => DeclineRequest(request.Id)">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Declined Requests
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var request in DeclinedRequests)
+                        {
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            @request.Requestor.User.UserName
+                                        </h4>
+                                        <p class="card-text">@request.Description</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.row -->
+
 
 </div>
 
 @code {
-    List<Hero> Heroes;
-    string Codename;
+    List<Request> Requests;
+    List<Request> AcceptedRequests;
+    List<Request> PendingRequests;
+    List<Request> DeclinedRequests;
 
     protected override async Task OnInitializedAsync()
     {
-        await GetHeroes();
+        await GetMyRequests();
     }
 
-    private async Task SendEmail()
+    private async Task AcceptRequest(int requestId)
     {
-        //await Notification.SendRequestReceivedEmailAsync();
+        var heroCount = new HeroController(dbcontext, notificationSettings);
+        await heroCount.AcceptRequest(requestId);
     }
 
-    private async Task SearchHeroes()
+    private async Task DeclineRequest(int requestId)
     {
-        Heroes = Heroes.Where(h => h.Tags.Contains(this.Codename)).Select(h => h).ToList();
+        var heroCount = new HeroController(dbcontext, notificationSettings);
+        await heroCount.DeclineRequest(requestId);
     }
 
-    private async Task ClearSeach()
+    private async Task GetMyRequests()
     {
-        Codename = "";
-        await GetHeroes();
-    }
+        var heroCount = new HeroController(dbcontext, notificationSettings);
+        Requests = heroCount.GetRequests(1);
 
-    private async Task GetHeroes()
-    {
-        Heroes = new List<Hero>();
-        Heroes.Add(new Hero
-        {
-            Description = "Description Test",
-            User = new ApplicationUser
-            {
-                UserName = "Daniel Dantas",
-                Email = "danieldnds@gmail.com",
-            },
-            Tags = "Batman/Spiderman"
-        });
-
-        Heroes.Add(new Hero
-        {
-            Description = "Another Test",
-            User = new ApplicationUser
-            {
-                UserName = "Matthew Zent",
-                Email = "matthew@gmail.com"
-            },
-            Tags = "Aquaman/Superman"
-        });
-
-        Heroes.Add(new Hero
-        {
-            Description = "Testing",
-            User = new ApplicationUser
-            {
-                UserName = "Colton",
-                Email = "colton@gmail.com"
-            },
-            Tags = "Flash"
-        });
-
-        Heroes.Add(new Hero
-        {
-            Description = "Testing 123",
-            User = new ApplicationUser
-            {
-                UserName = "Jordan Nelson",
-                Email = "Jordan@gmail.com"
-            },
-            Tags = "Ironman"
-        });
+        AcceptedRequests = Requests.Where(r => r.Status == 1).ToList();
+        PendingRequests = Requests.Where(r => r.Status == 0).ToList();
+        DeclinedRequests = Requests.Where(r => r.Status == 2).ToList();
     }
 }
