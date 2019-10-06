@@ -15,12 +15,5 @@
 
 @code {
 
-    public string teststr = "be43881f-6051-49e6-8e54-8a62c71cd59c";
-
-    public string test (ApplicationDbContext _context) {
-        UserController con = new UserController(_context);
-        Hero hero = con.GetHero(this.teststr);
-        return hero.Location;
-    }
 }
 
