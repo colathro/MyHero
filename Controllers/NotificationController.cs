@@ -42,9 +42,6 @@ namespace MyHero.Controllers
         {
             var builder = new BodyBuilder();
 
-            var image = builder.LinkedResources.Add(@"C:\Projects\MyHero\TempFiles\hero1.jpg");
-            image.ContentId = MimeUtils.GenerateMessageId();
-
             builder.HtmlBody = string.Format(@"<p>Hey {0},<br>
                                 <p>Your assistance has been requested by {1}.<br>
                                 <p>{1} says: '-{2}'<br>
@@ -57,14 +54,10 @@ namespace MyHero.Controllers
         {
             var builder = new BodyBuilder();
 
-            var image = builder.LinkedResources.Add(@"C:\Projects\MyHero\TempFiles\hero1.jpg");
-            image.ContentId = MimeUtils.GenerateMessageId();
-
             builder.HtmlBody = string.Format(@"<p>Hey {0},<br>
                                 <p>Your request has been accepted by {1}.<br>
                                 <p>You can contact your hero at:<br>
-                                <p>{2}<br>
-                                <center><img src=""cid:{3}""></center>", requesterName, acceptedBy, heroEmail, image.ContentId);
+                                <p>{2}<br>", requesterName, acceptedBy, heroEmail);
 
             return builder.ToMessageBody();
         }
