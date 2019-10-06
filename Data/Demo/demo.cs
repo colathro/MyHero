@@ -37,8 +37,10 @@ namespace MyHero.Data.Demo
             for (int i = 0; i < 50; i++)
             {
                 Random rnd = new Random();
-                String name = names[rnd.Next(0, names.Length - 1)] + " " + names[rnd.Next(0, names.Length - 1)];
-                ApplicationUser ru = new ApplicationUser { UserName = name, Email = name + "@gmail.com" };
+                var first = names[rnd.Next(0, names.Length - 1)];
+                var last = names[rnd.Next(0, names.Length - 1)];
+                String name = first + "." + last;
+                ApplicationUser ru = new ApplicationUser { UserName = name, Email = name + "@gmail.com", FirstName=first, LastName=last };
                 Context.User.Add(ru);
                 Hero rh = new Hero { User = ru, Longitude = -1, Latitude = 1, Location = "Fargo, ND, USA", Phone = "701-321-4567", Tags = "Fire Fighter;Spider Man;Deadpool", Description = "Hi, I'm Bilbo Baggins. I'm from Middle Earth and am new to Fargo. Looking to do some community service in the area.", Radius = 50 };
                 Context.Hero.Add(rh);
