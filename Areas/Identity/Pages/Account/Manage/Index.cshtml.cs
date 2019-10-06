@@ -39,6 +39,17 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
         [BindProperty]
         public InputModel Input { get; set; }
 
+        [BindProperty]
+        public InputModel2 Input2 { get; set; }
+
+        public class InputModel2
+        {
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+        }
         public class InputModel
         {
             [Phone]
@@ -73,6 +84,8 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
             {
                 PhoneNumber = phoneNumber
             };
+
+            Input2 = new InputModel2{};
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -141,12 +154,15 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
         {
             UserController con = new UserController(_dbContext);
             Hero her = con.GetHero(_user.Id);
+            ApplicationUser usr = con.GetUser(_user.Id);
 
             her.Radius = Int32.Parse(this.Input.Radius);
             her.Location = this.Input.Location;
             her.Description = this.Input.Description;
             her.Latitude = Double.Parse(this.Input.Latitude);
             her.Longitude = Double.Parse(this.Input.Longitude);
+            usr.FirstName = this.Input2.FirstName;
+            usr.LastName = this.Input2.LastName;
             _dbContext.SaveChanges();
         }
 
@@ -154,12 +170,15 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
         {
             UserController con = new UserController(_dbContext);
             Hero her = con.GetHero(_user.Id);
+            ApplicationUser usr = con.GetUser(_user.Id);
 
             this.Input.Radius = her.Radius.ToString();
             this.Input.Location = her.Location;
             this.Input.Latitude = her.Latitude + "";
             this.Input.Longitude = her.Longitude + "";
             this.Input.Description = her.Description;
+            this.Input2.FirstName = usr.FirstName;
+            this.Input2.LastName = usr.LastName;
         }
     }
 }

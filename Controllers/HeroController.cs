@@ -34,16 +34,17 @@ namespace MyHero.Controllers
             double lng = requestor.Longitude;
             FormattableString sql = $@"Select * From Hero Where Latitude < {lat} + 0.0253 and Latitude > {lat} - 0.0253 and Longitude < {lng} + 0.0371 and Longitude > {lng} - 0.0371";
             List<Hero> all = dbcontext.Hero.FromSqlInterpolated(sql).Include(h => h.User).ToList();
+            List<Hero> ret = new List<Hero>();
             foreach(Hero h in all)
             {
                 double A = (h.Longitude - lng) * Math.Cos((lat + h.Latitude) / 2);
                 double B = h.Latitude - lat;
                 double c = Math.Sqrt(A*A+B*B)*3958.8;
-                if(c > h.Radius){
-                    all.Remove(h);
+                if(c <= h.Radius){
+                    ret.Add(h);
                 }
             }
-            return all;
+            return ret;
             // return heros
 
             // return dbcontext.Hero.Include(h => h.User).Take(5).ToList();
