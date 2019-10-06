@@ -14,6 +14,8 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
 
         public static string ChangePassword => "ChangePassword";
 
+        public static string UserProfile => "UserProfile";
+
         public static string ProfileSetup => "ProfileSetup";
 
         public static string ExternalLogins => "ExternalLogins";
@@ -28,6 +30,7 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
 
         public static string ProfileSetupNavClass(ViewContext viewContext) => PageNavClass(viewContext, ProfileSetup);
 
+        public static string UserProfileNavClass(ViewContext viewContext) => PageNavClass(viewContext, UserProfile);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 
