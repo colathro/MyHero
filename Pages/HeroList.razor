@@ -41,9 +41,9 @@
                             </h4>
                             <div class="container-fluid">
                                 @{var tags = TagList(hero.Tags); }
-                                @for (int x = 0; x < @tags.Length; x++)
-                                {       
-                                      <button type="button" class="btn btn-outline-secondary btn-sm">@tags[@x]</button>
+                                @foreach (var tag in tags)
+                                {
+                                    <button type="button" class="btn btn-outline-secondary btn-sm">@tag</button>
                                 }
                             </div>
                             <div>
@@ -52,10 +52,16 @@
                             <p class="card-text">@hero.Description</p>
                         </div>
                         <div class="card-footer">
-                            <div class="btn-group">
-                                <button class="btn btn-outline-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
-                            </div>
-
+                            @if (requestor != null)
+                            {
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <h5>REGISTER TO SEND REQUESTS</h5>
+                            }
                         </div>
                     </div>
                 </div>
@@ -79,6 +85,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        requestor = dbcontext.Requestor.Include(r => r.User).Where(r => r.Id == Int32.Parse(Id)).FirstOrDefault();
         await GetHeroes();
     }
 
@@ -108,8 +115,16 @@
         };
     }
 
-    private string[] TagList (string tags){
-        return tags.Split(';');
+    private List<string> TagList(string tags)
+    {
+        if(tags != null)
+        {
+            return tags.Split(';').ToList();
+        }
+        else
+        {
+            return new List<string>();
+        }
     }
 
     private async Task SendRequest(int heroId)
