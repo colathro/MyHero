@@ -12,12 +12,14 @@
 
 <AuthorizeView>
     <Authorized>
-    
+    @{ con = new HeroController(_context);
+        hero = con.GetHeroById(Int32.Parse(Id));
+        }
     <div class="container mt-4">
       <div class="row">
           <div class="col-8">
 
-              <h1>Hi, I'm Colton. </h1>
+              <h1>Hi, I'm @hero.User.UserName </h1>
 
               <br />
 
@@ -26,10 +28,7 @@
               <br />
 
               <p>
-                  I love to code and I work for Microsoft. I love to eat TacoBell and shit my pants.
-                  I'm an avid cycling, and even race; but have yet to win. I like to compete in hack-
-                  athons to test my coding ability and have fun with friends. Please let me touch your
-                  children.
+                  @hero.Description
               </p>
 
               <br/>
@@ -92,4 +91,6 @@
     public string Id { get; set; }
 
     public HeroController con;
+
+    public Hero hero;
 }

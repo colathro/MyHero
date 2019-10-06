@@ -21,6 +21,11 @@ namespace MyHero.Controllers
             notification = new NotificationController(notificationSettingsAccessor);
         }
 
+        public HeroController(ApplicationDbContext _dbcontext)
+        {
+            dbcontext = _dbcontext;
+        }
+
         public List<Hero> GetHeros(ApplicationUser _user)
         {
             // Fetch User Location
@@ -68,7 +73,7 @@ namespace MyHero.Controllers
 
         public Hero GetHeroById(int id)
         {
-            Hero ret = dbcontext.Hero.Where(e => e.Id == id).FirstOrDefault();
+            Hero ret = dbcontext.Hero.Where(e => e.Id == id).Include(e => e.User).FirstOrDefault();
             return ret;
         }
     }
