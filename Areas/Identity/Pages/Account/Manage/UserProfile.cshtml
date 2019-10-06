@@ -15,22 +15,22 @@
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input2.FirstName"></label>
-                    <input asp-for="Input2.FirstName" class="form-control" />
+                    <input asp-for="Input2.FirstName" class="form-control" requred/>
                 </div>
                 <br />
                 <div class="form-group">
                     <label asp-for="Input2.LastName"></label>
-                    <input asp-for="Input2.LastName" class="form-control" />
+                    <input asp-for="Input2.LastName" class="form-control" required/>
                 </div>
                 <div class="form-group">
                     <br />
                     <label asp-for="Input.Location"></label>
-                    <input id="pac-input" asp-for="Input.Location" class="form-control" />
+                    <input id="pac-input" asp-for="Input.Location" class="form-control" required />
                     <br />
                     <input type="hidden" asp-for="Input.Latitude" class="form-control" id="latitude"/>
                     <input type="hidden" asp-for="Input.Longitude"class="form-control"id="longitude"/>
                     <label asp-for="Input.Description"></label>
-                    <textarea asp-for="Input.Description" class="form-control"></textarea>
+                    <textarea asp-for="Input.Description" class="form-control" required></textarea>
                     <br />
                 </div>
                 <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
