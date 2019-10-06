@@ -114,12 +114,12 @@ namespace MyHero.Controllers
 
         public void deleteHeroRequestor(ApplicationUser user)
         {
-            Hero h = dbcontext.Hero.Single(a => a.User == user);
+            Hero h = dbcontext.Hero.SingleOrDefault(a => a.User == user);
             if(h != null)
             {
                 dbcontext.Remove(h);
             }
-            Requestor r = dbcontext.Requestor.Single(a => a.User == user);
+            Requestor r = dbcontext.Requestor.SingleOrDefault(a => a.User == user);
             if(r != null)
             {
                 dbcontext.Remove(r);
