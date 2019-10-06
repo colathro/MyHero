@@ -6,7 +6,7 @@
 
 <AuthorizeView>
     <Authorized>
-        @test(_context)
+        
     </Authorized>
     <NotAuthorized>
         You're not logged in.
@@ -20,7 +20,6 @@
     public string test (ApplicationDbContext _context) {
         UserController con = new UserController(_context);
         Hero hero = con.GetHero(this.teststr);
-        Requestor req = con.GetRequestor(this.teststr);
         return hero.Location;
     }
 }

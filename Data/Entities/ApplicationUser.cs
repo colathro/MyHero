@@ -12,5 +12,7 @@ namespace MyHero.Data
         public Requestor Requestor { get; set; }
 
         public Hero Hero { get; set; }
+
+        public string UserType { get; set; }
     }
 }

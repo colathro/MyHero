@@ -34,6 +34,9 @@ function initMap() {
                 ].join(' ');
 
             }
+            document.getElementById('latitude').value = place.geometry.location.lat() * 3.14 / 180;
+            document.getElementById('longitude').value = place.geometry.location.lng() * 3.14 / 180;
+
             document.getElementById('latlong').innerHTML = "Lat: " + place.geometry.location.lat() + ",Long: " + place.geometry.location.lng();
         });
     } else {
