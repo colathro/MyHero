@@ -30,15 +30,23 @@ namespace MyHero.Controllers
         {
             var requestor = dbcontext.Requestor.Where(r => r.Id == requestorId).FirstOrDefault();
             //Fetch User Location
-            //double? lat = requestor.Latitude;
-            //double? lng = requestor.Longitude;
-            //FormattableString sql = $@"with c as (Select *, (Longitude - {lng}) * COS(({lat} + Latitude) / 2) as A, Latitude - {lat} as B From Hero Where Latitude < {lat} + 0.0253 and Latitude > {lat} - 0.0253 and Longitude < {lng} + 0.0371 and Longitude > {lng} - 0.0371) Select * From C Where SQRT(A * A + B * B) * 3958.8 < Radius";
-            //return dbcontext.Hero.FromSqlInterpolated(sql).Include(h => h.User).ToList();
-            // Custom query to return heros in radius
+            double lat = requestor.Latitude;
+            double lng = requestor.Longitude;
+            FormattableString sql = $@"Select * From Hero Where Latitude < {lat} + 0.0253 and Latitude > {lat} - 0.0253 and Longitude < {lng} + 0.0371 and Longitude > {lng} - 0.0371";
+            List<Hero> all = dbcontext.Hero.FromSqlInterpolated(sql).Include(h => h.User).ToList();
+            foreach(Hero h in all)
+            {
+                double A = (h.Longitude - lng) * Math.Cos((lat + h.Latitude) / 2);
+                double B = h.Latitude - lat;
+                double c = Math.Sqrt(A*A+B*B)*3958.8;
+                if(c > h.Radius){
+                    all.Remove(h);
+                }
+            }
+            return all;
+            // return heros
 
-            //return heros
-
-            return dbcontext.Hero.Include(h => h.User).Take(5).ToList();
+            // return dbcontext.Hero.Include(h => h.User).Take(5).ToList();
         }
 
         public List<Request> GetRequests(int heroId)
