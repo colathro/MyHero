@@ -28,4 +28,9 @@
     <Compile Remove="Models\HeroModel.cs" />
     <Compile Remove="Models\RequesterModel.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="Pages\DemoData.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
 </Project>
