@@ -104,12 +104,12 @@ namespace MyHero.Controllers
                     Hero = hero,
                     DateRequested = DateTime.Now,
                     Status = 0,
-                    Description = "Test Description"
+                    Description = requester.Description
                 };
 
                 dbcontext.Request.Add(request);
 
-                notification.SendRequestAcceptedEmailAsync(request.Requestor.User.FirstName + " " + request.Requestor.User.LastName, request.Requestor.User.Email, request.Hero.User.FirstName + " " + request.Hero.User.LastName, request.Hero.User.Email);
+                notification.SendRequestReceivedEmailAsync(request.Requestor.User.FirstName + " " + request.Requestor.User.LastName, request.Description, request.Hero.User.FirstName + " " + request.Hero.User.LastName, request.Hero.User.Email);
 
                 dbcontext.SaveChanges();
             }
