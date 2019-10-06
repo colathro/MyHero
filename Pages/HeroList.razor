@@ -33,18 +33,18 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src=@ImageController.GetImage() alt=""></a>
+                        <a href=@GetHeroUrl(hero.Id)><img class="card-img-top" src=@ImageController.GetImage() alt=""></a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">@hero.User.FirstName @hero.User.LastName</a>
+                                <a href=@GetHeroUrl(hero.Id)>@hero.User.FirstName @hero.User.LastName</a>
                             </h4>
                             <h5>@hero.Tags</h5>
+                            <div>
+                                <small class="text-muted">@GetSomeRawHtml()</small>
+                            </div> 
                             <p class="card-text">@hero.Description</p>
                         </div>
-                        <div class="card-footer">
-                            <div class="col-lg-8">
-                                <small class="text-muted">@GetSomeRawHtml()</small>
-                            </div>                            
+                        <div class="card-footer">                           
                             <div class="btn-group">
                                 <button class="btn btn-outline-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
                             </div>
@@ -74,6 +74,11 @@
         await GetHeroes();
     }
 
+    public string GetHeroUrl(int id)
+    {
+        return "/heroprofile/" + id.ToString();
+    }
+
     private string RandomStars(){
         Random rand = new Random();
         int x = rand.Next(5);
@@ -81,12 +86,7 @@
         string output = "";
         for (int ctr = 0; ctr <= x-1; ctr++)
         {
-            output += "★";
-        }
-
-        for (int ctr = 0; ctr <= 5-x-1; ctr++)
-        {
-            output += "☆";
+            output += "⭐";
         }
         return output;
     }
