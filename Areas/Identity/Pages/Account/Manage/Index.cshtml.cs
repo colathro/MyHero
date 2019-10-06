@@ -53,7 +53,7 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Phone number (Optional)")]
             public string PhoneNumber { get; set; }
 
             [Display(Name = "Location")]
@@ -161,6 +161,7 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
             her.Description = this.Input.Description;
             her.Latitude = Double.Parse(this.Input.Latitude);
             her.Longitude = Double.Parse(this.Input.Longitude);
+            her.Tags = "Hero";
             usr.FirstName = this.Input2.FirstName;
             usr.LastName = this.Input2.LastName;
             _dbContext.SaveChanges();
