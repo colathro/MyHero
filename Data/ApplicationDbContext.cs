@@ -20,6 +20,8 @@ namespace MyHero.Data
         public DbSet<Hero> Hero { get; set; }
         public DbSet<Requestor> Requestor { get; set; }
 
+        public DbSet<Request> Request { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<SampleDataEntity>().ToTable("SampleDataEntity");
