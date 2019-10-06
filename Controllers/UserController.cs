@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyHero.Controllers
 {
-    public class UserController 
+    public class UserController
     {
         private ApplicationDbContext dbcontext;
 
@@ -30,7 +30,13 @@ namespace MyHero.Controllers
             return hero.Hero;
         }
 
-        private Boolean NeedsToPopulate(ApplicationUser user)
+        public ApplicationUser GetUser(string _userid)
+        {
+            var user = dbcontext.User.Where(r => r.Id == _userid).FirstOrDefault();
+            return user;
+        }
+
+        private Boolean NeedsToPopulateHero(ApplicationUser user)
         {
             if (dbcontext.User.Where(i => i.Id == user.Id).Include(e => e.Hero).First().Hero is null)
             {
@@ -41,17 +47,37 @@ namespace MyHero.Controllers
                 return false;
             }
         }
-
-        public void PopulateHeroRequestor(ApplicationUser user)
+        private Boolean NeedsToPopulateRequestor(ApplicationUser user)
         {
-            if (this.NeedsToPopulate(user))
+            if (dbcontext.User.Where(i => i.Id == user.Id).Include(e => e.Requestor).First().Requestor is null)
             {
-                Hero hero = new Hero { Latitude = 1.00, Longitude = 1.00, Radius = 10 };
-                Requestor requestor = new Requestor { Latitude = 1.00, Longitude = 1.00 };
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-                user.Hero = hero;
-                user.Requestor = requestor;
+        public void PopulateHeroRequestor(ApplicationUser user, bool hero, bool requestor)
+        {
+            bool needsUpdate = false;
+            if (hero && this.NeedsToPopulateHero(user))
+            {
+                Hero hro = new Hero { Latitude = 1.00, Longitude = 1.00, Radius = 10 };
+                user.Hero = hro;
+                needsUpdate = true;
+            }
 
+            if (requestor && this.NeedsToPopulateRequestor(user))
+            {
+                Requestor rqstr = new Requestor { Latitude = 1.00, Longitude = 1.00 };
+                user.Requestor = rqstr;
+                needsUpdate = true;
+            }
+
+            if (needsUpdate)
+            {
                 dbcontext.SaveChanges();
             }
         }
