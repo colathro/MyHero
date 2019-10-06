@@ -39,7 +39,13 @@
                             <h4 class="card-title">
                                 <a href=@GetHeroUrl(hero.Id)>@hero.User.FirstName @hero.User.LastName</a>
                             </h4>
-                            <h5>@hero.Tags</h5>
+                            <div class="container-fluid">
+                                @{var tags = TagList(hero.Tags); }
+                                @for (int x = 0; x < @tags.Length; x++)
+                                {       
+                                      <button type="button" class="btn btn-outline-secondary btn-sm">@tags[@x]</button>
+                                }
+                            </div>
                             <div>
                                 <small class="text-muted">@GetSomeRawHtml()</small>
                             </div>
@@ -100,6 +106,10 @@
         {
             builder.AddContent(0, RandomStars());
         };
+    }
+
+    private string[] TagList (string tags){
+        return tags.Split(';');
     }
 
     private async Task SendRequest(int heroId)

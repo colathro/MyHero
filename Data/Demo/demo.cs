@@ -35,21 +35,32 @@ namespace MyHero.Data.Demo
 
             int lng = -16903;
             int lat = 08177;
+            String[] tags = {"Deadpool", "Fire Fighter", "Spider Man", "Princess", "Black Panther", "Superman", "Wonder Woman", "Policeman", "Doctor", "Antman", "Aquaman", "Green Lantern", "Wizard"};
             String[] names = { "Bob", "Alice", "Tom", "Cindy", "Mohammed", "Alex", "Charles", "Dale", "Daniel", "Jonathon", "Johnson", "Akshay" };
+            String[] lastn = {"Johnson", "Wilson", "Dantas", "Panthrope", "Forest", "Danielson", "Brown", "Miller", "Thompson"};
             for (int i = 0; i < 50; i++)
             {
                 Random rnd = new Random();
                 var first = names[rnd.Next(0, names.Length - 1)];
-                var last = names[rnd.Next(0, names.Length - 1)];
+                var last = lastn[rnd.Next(0, lastn.Length - 1)];
                 double rlat = (rnd.Next((int)lat-371,(int)lat+371)+0.0)/10000.0;
                 double rlng = (rnd.Next((int)lng-253,(int)lng+253)+0.0)/10000.0;
                 String name = first + "." + last;
+                string tagList;
+                if(rnd.Next(0,2) == 1)
+                {
+                    tagList = tags[rnd.Next(0,tags.Length-1)];
+                }
+                else
+                {
+                    tagList = tags[rnd.Next(0,8)] + ";" + tags[rnd.Next(8,tags.Length-1)];
+                }
                 ApplicationUser ru = new ApplicationUser { UserName = name, Email = name + "@gmail.com", FirstName=first, LastName=last };
                 Context.User.Add(ru);
-                Hero rh = new Hero { User = ru, Longitude = rlng, Latitude = rlat, Location = "Fargo, ND, USA", Phone = "701-321-4567", Tags = "Fire Fighter;Spider Man;Deadpool", Description = "Hi, I'm Bilbo Baggins. I'm from Middle Earth and am new to Fargo. Looking to do some community service in the area.", Radius = 50 };
+                Hero rh = new Hero { User = ru, Longitude = rlng, Latitude = rlat, Location = "Fargo, ND, USA", Phone = "701-321-4567", Tags = tagList, Description = "Hi, I'm "+ name + ". I'm new to Fargo. Looking to do some community service in the area.", Radius = 50 };
                 Context.Hero.Add(rh);
                 first = names[rnd.Next(0, names.Length - 1)];
-                last = names[rnd.Next(0, names.Length - 1)];
+                last = lastn[rnd.Next(0, lastn.Length - 1)];
                 name = first + "." + last;
                 rlat = (rnd.Next((int)lat-371,(int)lat+371)+0.0)/10000.0;
                 rlng = (rnd.Next((int)lng-253,(int)lng+253)+0.0)/10000.0;
