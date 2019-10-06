@@ -45,7 +45,7 @@
     <Content Update="Pages\DemoData.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Update="Pages\MyRequests.razor">
+    <Content Update="Pages\HeroRequests.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>

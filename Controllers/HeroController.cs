@@ -43,7 +43,10 @@ namespace MyHero.Controllers
 
         public List<Request> GetRequests(int heroId)
         {
-            var requests = dbcontext.Request.Include(r => r.Hero).Where(r => r.Hero.Id == heroId).Select(r => r).ToList();
+            var requests = dbcontext.Request.Include(r => r.Hero)
+                .Include(r => r.Requestor)
+                .Include(r => r.Requestor.User)
+                .Where(r => r.Hero.Id == heroId).Select(r => r).ToList();
             return requests;
         }
 

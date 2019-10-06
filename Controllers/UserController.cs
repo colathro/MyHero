@@ -102,5 +102,14 @@ namespace MyHero.Controllers
 
             return Task.FromResult(true);
         }
+
+        public List<Request> GetRequests(int requesterId)
+        {
+            var requests = dbcontext.Request.Include(r => r.Hero)
+                .Include(r => r.Requestor)
+                .Include(r => r.Hero.User)
+                .Where(r => r.Requestor.Id == requesterId).Select(r => r).ToList();
+            return requests;
+        }
     }
 }

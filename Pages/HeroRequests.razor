@@ -1,5 +1,4 @@
-@page "/myrequests"
-
+﻿@page "/herorequests/{Id}"
 
 @using MyHero.Controllers
 @using MyHero.Data
@@ -31,12 +30,11 @@
                                         <h4 class="card-title">
                                             @request.Requestor.User.UserName
                                         </h4>
+                                        <h5>@request.DateRequested.ToString("mm/dd/yyyy")</h5>
                                         <p class="card-text">@request.Description</p>
                                     </div>
                                     <div class="card-footer">
                                         <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                                        <button class="btn btn-primary" @onclick="() => AcceptRequest(request.Id)">Accept</button>
-                                        <button class="btn btn-primary" @onclick="() => DeclineRequest(request.Id)">Decline</button>
                                     </div>
                                 </div>
                             </div>
@@ -64,12 +62,15 @@
                                         <h4 class="card-title">
                                             @request.Requestor.User.UserName
                                         </h4>
+                                        <h5>@request.DateRequested.ToString("mm/dd/yyyy")</h5>
                                         <p class="card-text">@request.Description</p>
                                     </div>
                                     <div class="card-footer">
                                         <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                                        <button class="btn btn-primary" @onclick="() => AcceptRequest(request.Id)">Accept</button>
-                                        <button class="btn btn-primary" @onclick="() => DeclineRequest(request.Id)">Decline</button>
+                                        <div class="btn-group">
+                                            <button class="btn btn-success" @onclick="() => AcceptRequest(request.Id)">Accept</button>
+                                            <button class="btn btn-danger" @onclick="() => DeclineRequest(request.Id)">Decline</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -97,6 +98,7 @@
                                         <h4 class="card-title">
                                             @request.Requestor.User.UserName
                                         </h4>
+                                        <h5>@request.DateRequested.ToString("mm/dd/yyyy")</h5>
                                         <p class="card-text">@request.Description</p>
                                     </div>
                                 </div>
@@ -117,6 +119,9 @@
     List<Request> PendingRequests;
     List<Request> DeclinedRequests;
 
+    [Parameter]
+    public String Id { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await GetMyRequests();
@@ -124,20 +129,22 @@
 
     private async Task AcceptRequest(int requestId)
     {
-        var heroCount = new HeroController(dbcontext, notificationSettings);
-        await heroCount.AcceptRequest(requestId);
+        var heroController = new HeroController(dbcontext, notificationSettings);
+        await heroController.AcceptRequest(requestId);
+        await GetMyRequests();
     }
 
     private async Task DeclineRequest(int requestId)
     {
-        var heroCount = new HeroController(dbcontext, notificationSettings);
-        await heroCount.DeclineRequest(requestId);
+        var heroController = new HeroController(dbcontext, notificationSettings);
+        await heroController.DeclineRequest(requestId);
+        await GetMyRequests();
     }
 
     private async Task GetMyRequests()
     {
-        var heroCount = new HeroController(dbcontext, notificationSettings);
-        Requests = heroCount.GetRequests(1);
+        var heroController = new HeroController(dbcontext, notificationSettings);
+        Requests = heroController.GetRequests(Int32.Parse(Id));
 
         AcceptedRequests = Requests.Where(r => r.Status == 1).ToList();
         PendingRequests = Requests.Where(r => r.Status == 0).ToList();

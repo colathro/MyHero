@@ -1,0 +1,136 @@
+﻿@page "/userrequests/{Id}"
+
+@using MyHero.Controllers
+@using MyHero.Data
+@using MyHero.Models
+@inject ApplicationDbContext dbcontext;
+
+<div class="container">
+
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Accepted Requests
+                    </button>
+                </h2>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var request in AcceptedRequests)
+                        {
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            @request.Hero.User.UserName
+                                        </h4>
+                                        <h5>@request.DateRequested.ToString("mm/dd/yyyy")</h5>
+                                        <p class="card-text">@request.Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Pending Requests
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var request in PendingRequests)
+                        {
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            @request.Hero.User.UserName
+                                        </h4>
+                                        <h5>@request.DateRequested.ToString("mm/dd/yyyy")</h5>
+                                        <p class="card-text">@request.Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Declined Requests
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var request in DeclinedRequests)
+                        {
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            @request.Hero.User.UserName
+                                        </h4>
+                                        <h5>@request.DateRequested.ToString("mm/dd/yyyy")</h5>
+                                        <p class="card-text">@request.Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@code {
+    List<Request> Requests;
+    List<Request> AcceptedRequests;
+    List<Request> PendingRequests;
+    List<Request> DeclinedRequests;
+
+    [Parameter]
+    public String Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetMyRequests();
+    }
+
+    private async Task GetMyRequests()
+    {
+        var userController = new UserController(dbcontext);
+        Requests = userController.GetRequests(Int32.Parse(Id));
+
+        AcceptedRequests = Requests.Where(r => r.Status == 1).ToList();
+        PendingRequests = Requests.Where(r => r.Status == 0).ToList();
+        DeclinedRequests = Requests.Where(r => r.Status == 2).ToList();
+    }
+}
