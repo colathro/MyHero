@@ -111,5 +111,12 @@ namespace MyHero.Controllers
                 .Where(r => r.Requestor.Id == requesterId).Select(r => r).ToList();
             return requests;
         }
+
+        public void deleteHeroRequestor(ApplicationUser user)
+        {
+            dbcontext.Remove(dbcontext.Hero.Single(a => a.User == user));
+            dbcontext.Remove(dbcontext.Requestor.Single(a => a.User == user));
+            dbcontext.SaveChanges();
+        }
     }
 }
