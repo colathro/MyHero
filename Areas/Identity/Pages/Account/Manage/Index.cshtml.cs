@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyHero.Data;
+using MyHero.Controllers;
 
 namespace MyHero.Areas.Identity.Pages.Account.Manage
 {
@@ -17,6 +18,8 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private ApplicationDbContext _dbContext;
+
+        public ApplicationUser _applicationUser;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
@@ -42,8 +45,15 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
-            [Display(Name = "Custom")]
-            public string CustomTag { get; set; }
+            [Display(Name = "Location")]
+            public string Location { get; set; }
+
+            [Display(Name = "Description")]
+            public string Description { get; set; }
+
+            [Display(Name = "Travel Distance")]
+            public string Radius { get; set; }
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -62,12 +72,18 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+
+            ViewData["USER"] = user;
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
+
+            this.GetUserSettings(user);
+
             return Page();
         }
 
@@ -95,10 +111,32 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
             }
+            this.SetUserSettings(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
+        }
+
+        public void SetUserSettings(ApplicationUser _user)
+        {
+            UserController con = new UserController(_dbContext);
+            Hero her = con.GetHero(_user.Id);
+
+            her.Radius = Int32.Parse(this.Input.Radius);
+            her.Location = this.Input.Location;
+            her.Description = this.Input.Description;
+            _dbContext.SaveChanges();
+        }
+
+        public void GetUserSettings(ApplicationUser _user)
+        {
+            UserController con = new UserController(_dbContext);
+            Hero her = con.GetHero(_user.Id);
+
+            this.Input.Radius = her.Radius.ToString();
+            this.Input.Location = her.Location;
+            this.Input.Description = her.Description;
         }
     }
 }
