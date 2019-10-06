@@ -33,10 +33,10 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src=@ImageController.GetImage() alt=""></a>
+                        <a href=@GetHeroUrl(hero.Id)><img class="card-img-top" src=@ImageController.GetImage() alt=""></a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">@hero.User.FirstName @hero.User.LastName</a>
+                                <a href=@GetHeroUrl(hero.Id)>@hero.User.FirstName @hero.User.LastName</a>
                             </h4>
                             <h5>@hero.Tags</h5>
                             <p class="card-text">@hero.Description</p>
@@ -72,6 +72,11 @@
     protected override async Task OnInitializedAsync()
     {
         await GetHeroes();
+    }
+
+    public string GetHeroUrl(int id)
+    {
+        return "/heroprofile/" + id.ToString();
     }
 
     private string RandomStars(){
