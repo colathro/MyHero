@@ -33,7 +33,7 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg" alt=""></a>
+                        <a href="#"><img class="card-img-top" src=@ImageController.GetImage() alt=""></a>
                         <div class="card-body">
                             <h4 class="card-title">
                                 <a href="#">@hero.User.UserName</a>
@@ -43,7 +43,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="col-lg-8">
-                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                <small class="text-muted">@GetSomeRawHtml()</small>
                             </div>                            
                             <div class="btn-group">
                                 <button class="btn btn-success" @onclick="() => SendRequest(hero.Id)">Send Request</button>
@@ -72,6 +72,29 @@
     protected override async Task OnInitializedAsync()
     {
         await GetHeroes();
+    }
+
+    private string RandomStars(){
+        Random rand = new Random();
+        int x = rand.Next(5);
+
+        string output = "";
+        for (int ctr = 0; ctr <= x; ctr++)
+        {
+            output += "★";
+        }
+
+        for (int ctr = 0; ctr <= 5-x-1; ctr++)
+        {
+            output += "☆";
+        }
+        return output;
+    }
+
+    public RenderFragment GetSomeRawHtml() {
+      return builder => {
+        builder.AddContent(0, RandomStars());
+      };
     }
 
     private async Task SendRequest(int heroId)
