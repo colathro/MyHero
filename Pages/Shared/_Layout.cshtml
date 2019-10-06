@@ -1,7 +1,29 @@
+﻿@using MyHero.Data
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.ViewEngines
+@using MyHero.Pages.Shared
+@using Microsoft.EntityFrameworkCore;
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
+@inject ApplicationDbContext dbcontext;
+
+@{
+    Requestor _requestor = dbcontext.Requestor.Include(r => r.User).Where(r => r.User.UserName == User.Identity.Name).FirstOrDefault();
+    Hero _hero = dbcontext.Hero.Include(r => r.User).Where(r => r.User.UserName == User.Identity.Name).FirstOrDefault();
+    var navbarHeroList = "/herolist/";
+    var navbarUserRequests = "/userrequests/";
+    var navbarHeroRequests = "/herorequests/";
+    if(_requestor != null)
+    {
+        navbarHeroList += _requestor.Id.ToString();
+        navbarUserRequests += _requestor.Id.ToString();
+    }
+    if(_hero != null)
+    {
+        navbarHeroRequests += _hero.Id.ToString();
+    }
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,17 +52,26 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                      <li class="nav-item active">
-                        <a class="nav-link" href="/herolist/10">Hero List</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                      </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href=@navbarHeroList>Hero List</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown link
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="nav-link" href=@navbarHeroList>My Hero Requests</a>
+                                <a class="nav-link" href=@navbarHeroList>Hero List</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Features</a>
+                        </li>
                     </ul>
-                  </div>
+                </div>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     @{
-                        var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
+var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
                     }
                     @if (result.Success)
                     {
@@ -91,4 +122,5 @@
 
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>
