@@ -29,7 +29,7 @@
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        <button class="btn btn-primary" @onclick="SendEmail">Send Email</button>
+                        <button class="btn btn-primary" @onclick="SendRequest">Send Request</button>
                     </div>
                 </div>
             </div>
@@ -50,9 +50,9 @@
         await GetHeroes();
     }
 
-    private async Task SendEmail()
+    private async Task SendRequest()
     {
-        await Notification.SendRequestReceivedEmailAsync();
+        //await Notification.SendRequestReceivedEmailAsync();
     }
 
     private async Task SearchHeroes()

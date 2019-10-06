@@ -6,16 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace MyHero.Controllers
 {
     public class HeroController
     {
         private ApplicationDbContext dbcontext;
+        private NotificationController notification;
 
-        public HeroController(ApplicationDbContext _dbcontext)
+        public HeroController(ApplicationDbContext _dbcontext, IOptions<NotificationSettings> notificationSettingsAccessor)
         {
             dbcontext = _dbcontext;
+            notification = new NotificationController(notificationSettingsAccessor);
         }
 
         public ICollection<Hero> GetHeros(ApplicationUser _user)
@@ -38,18 +41,28 @@ namespace MyHero.Controllers
 
         public Task<bool> AcceptRequest(int requestId)
         {
-            var request = dbcontext.Request.Where(r => r.Id == requestId).FirstOrDefault();
+            var request = dbcontext.Request.Include(r => r.Hero).
+                Include(r => r.Hero.User).
+                Include(r => r.Requestor).
+                Include(r => r.Requestor.User).
+                Where(r => r.Id == requestId).FirstOrDefault();
+            
+            // Status = Accepted
+            request.Status = 1;
+            dbcontext.SaveChanges();
 
-            //var name = "testing";
-            //var email = "danieldnds@gmail.com";
+            notification.SendRequestAcceptedEmailAsync(request.Hero.User.UserName, request.Hero.User.Email, request.Requestor.User.UserName, request.Requestor.User.Email);
 
-            //SendEmail($"Your received a visit request by {name}", BuildRequestReceivedMessage(), name, email);
             return Task.FromResult(true);
         }
 
         public Task<bool> DeclineRequest(int requestId)
         {
-            //DELETE REQUEST
+            var request = dbcontext.Request.Where(r => r.Id == requestId).FirstOrDefault();
+
+            // Status = Declined
+            request.Status = 2;
+            dbcontext.SaveChanges();
             return Task.FromResult(true);
         }
     }

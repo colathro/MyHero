@@ -22,12 +22,9 @@ namespace MyHero.Controllers
         /// Send an email to Hero informing a visit request was received.
         /// </summary>
         /// <returns>True, if email was sent. False, otherwise.</returns>
-        public Task<bool> SendRequestReceivedEmailAsync()
+        public Task<bool> SendRequestReceivedEmailAsync(string requestedBy, string description, string heroName, string heroEmail)
         {
-            var name = "testing";
-            var email = "danieldnds@gmail.com";
-
-            SendEmail($"Your received a visit request by {name}", BuildRequestReceivedMessage(), name, email);
+            SendEmail($"Your received a visit request by {requestedBy}", BuildRequestReceivedMessage(requestedBy, description, heroName), heroName, heroEmail);
             return Task.FromResult(true);
         }
 
@@ -35,45 +32,39 @@ namespace MyHero.Controllers
         /// Send an email to Requester informing a Hero has accepted its visit request. 
         /// </summary>
         /// <returns>True, if email was sent. False, otherwise.</returns>
-        public Task<bool> SendRequestAcceptedEmailAsync()
+        public Task<bool> SendRequestAcceptedEmailAsync(string acceptedBy, string heroEmail, string requesterName, string requesterEmail)
         {
-            var name = "testing";
-            var email = "danieldnds@gmail.com";
-
-            SendEmail($"Your visit request was accepted by {name}", BuildRequestAcceptedMessage(), name, email);
+            SendEmail($"Your visit request was accepted by {acceptedBy}", BuildRequestAcceptedMessage(acceptedBy, heroEmail, requesterName), requesterName, requesterEmail);
             return Task.FromResult(true);
         }
 
-        private MimeEntity BuildRequestReceivedMessage()
+        private MimeEntity BuildRequestReceivedMessage(string requestedBy, string description, string heroName)
         {
             var builder = new BodyBuilder();
 
             var image = builder.LinkedResources.Add(@"C:\Projects\MyHero\TempFiles\hero1.jpg");
             image.ContentId = MimeUtils.GenerateMessageId();
 
-            builder.HtmlBody = string.Format(@"<p>Hey Alice,<br>
-                                <p>What are you up to this weekend? Monica is throwing one of her parties on
-                                Saturday and I was hoping you could make it.<br>
-                                <p>Will you be my +1?<br>
-                                <p>-- Joey<br>
-                                <center><img src=""cid:{0}""></center>", image.ContentId);
+            builder.HtmlBody = string.Format(@"<p>Hey {0},<br>
+                                <p>Your assistance has been requested by {1}.<br>
+                                <p>{1} says: '-{2}'<br>
+                                <p>Don't forget to accept or decline this mission on your profile<br>", heroName, requestedBy, description);
 
             return builder.ToMessageBody();
         }
 
-        private MimeEntity BuildRequestAcceptedMessage()
+        private MimeEntity BuildRequestAcceptedMessage(string acceptedBy, string heroEmail, string requesterName)
         {
             var builder = new BodyBuilder();
 
             var image = builder.LinkedResources.Add(@"C:\Projects\MyHero\TempFiles\hero1.jpg");
             image.ContentId = MimeUtils.GenerateMessageId();
 
-            builder.HtmlBody = string.Format(@"<p>Hey Alice,<br>
-                                <p>What are you up to this weekend? Monica is throwing one of her parties on
-                                Saturday and I was hoping you could make it.<br>
-                                <p>Will you be my +1?<br>
-                                <p>-- Joey<br>
-                                <center><img src=""cid:{0}""></center>", image.ContentId);
+            builder.HtmlBody = string.Format(@"<p>Hey {0},<br>
+                                <p>Your request has been accepted by {1}.<br>
+                                <p>You can contact your hero at:<br>
+                                <p>{2}<br>
+                                <center><img src=""cid:{3}""></center>", requesterName, acceptedBy, heroEmail, image.ContentId);
 
             return builder.ToMessageBody();
         }

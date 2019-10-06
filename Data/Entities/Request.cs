@@ -13,7 +13,7 @@ namespace MyHero.Data
 
         public DateTime DateRequested { get; set; }
 
-        public bool Accepted { get; set; }
+        public int Status { get; set; }
 
         public Hero Hero { get; set; }
 
