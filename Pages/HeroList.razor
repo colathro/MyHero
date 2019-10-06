@@ -2,57 +2,84 @@
 
 @using MyHero.Controllers
 @using MyHero.Data
-@inject NotificationController Notification
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using MyHero.Models
+@using Microsoft.Extensions.Options
+@inject ApplicationDbContext dbcontext;
+@inject UserManager<ApplicationUser> UserManager
+@inject IOptions<NotificationSettings> notificationSettings;
 
-<div class="container">
+<AuthorizeView>
+    <Authorized>
+        @{ test(context.User); }
+        <div class="container">
 
-    <div class="row">
-        <div class="col-lg-10">
-            <input type="text" placeholder="Search.." @bind="this.Codename" />
-            <button class="btn btn-primary" type="button" @onclick="SearchHeroes">Search</button>
-            <button class="btn btn-secondary" type="button" @onclick="ClearSeach">Clear</button>
-        </div>       
-    </div>
-
-    <div class="row">
-        @foreach (var hero in Heroes)
-        {
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100">
-                    <a href="#"><img class="card-img-top" src="https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg" alt=""></a>
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            <a href="#">@hero.User.UserName</a>
-                        </h4>
-                        <h5>@hero.Tags</h5>
-                        <p class="card-text">@hero.Description</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        <button class="btn btn-primary" @onclick="SendRequest">Send Request</button>
-                    </div>
+            <div class="row">
+                <div class="col-lg-10">
+                    <input type="text" placeholder="Search.." @bind="this.Codename" />
+                    <button class="btn btn-primary" type="button" @onclick="SearchHeroes">Search</button>
+                    <button class="btn btn-secondary" type="button" @onclick="ClearSeach">Clear</button>
                 </div>
             </div>
-        }
-    </div>
-    <!-- /.row -->
+            @if (Heroes == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var hero in Heroes)
+                    {
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100">
+                                <a href="#"><img class="card-img-top" src="https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg" alt=""></a>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        <a href="#">@hero.User.UserName</a>
+                                    </h4>
+                                    <h5>@hero.Tags</h5>
+                                    <p class="card-text">@hero.Description</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                    <button class="btn btn-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <!-- /.row -->
+            }
 
-</div>
-<!-- /.container -->
+        </div>
+        <!-- /.container -->
+    </Authorized>
+</AuthorizeView>
 
 @code {
 
     List<Hero> Heroes;
     string Codename;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await GetHeroes();
+        if (firstRender)
+        {
+            await GetHeroes();
+        }
     }
 
-    private async Task SendRequest()
+    public async void test(ClaimsPrincipal cp)
     {
-        //await Notification.SendRequestReceivedEmailAsync();
+        ApplicationUser user1 = await UserManager.GetUserAsync(cp);
+    }
+
+    private async Task SendRequest(int heroId)
+    {
+        var userController = new UserController(dbcontext);
+        await userController.SendRequest(heroId);
     }
 
     private async Task SearchHeroes()
@@ -68,50 +95,9 @@
 
     private async Task GetHeroes()
     {
-        Heroes = new List<Hero>();
-        Heroes.Add(new Hero
-        {
-            Description = "Description Test",
-            User = new ApplicationUser
-            {
-                UserName = "Daniel Dantas",
-                Email = "danieldnds@gmail.com",
-            },
-            Tags = "Batman/Spiderman"
-        });
+        var heroCount = new HeroController(dbcontext, notificationSettings);
 
-        Heroes.Add(new Hero
-        {
-            Description = "Another Test",
-            User = new ApplicationUser
-            {
-                UserName = "Matthew Zent",
-                Email = "matthew@gmail.com"
-            },
-            Tags = "Aquaman/Superman"
-        });
-
-        Heroes.Add(new Hero
-        {
-            Description = "Testing",
-            User = new ApplicationUser
-            {
-                UserName = "Colton",
-                Email = "colton@gmail.com"
-            },
-            Tags = "Flash"
-        });
-
-        Heroes.Add(new Hero
-        {
-            Description = "Testing 123",
-            User = new ApplicationUser
-            {
-                UserName = "Jordan Nelson",
-                Email = "Jordan@gmail.com"
-            },
-            Tags = "Ironman"
-        });
+        Heroes = heroCount.GetHeros(user);
     }
 
 }

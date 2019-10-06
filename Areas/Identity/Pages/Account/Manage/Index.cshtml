@@ -58,6 +58,13 @@
                     <label asp-for="Input.Description"></label>
                     <textarea asp-for="Input.Description" class="form-control"></textarea>
                     <br />
+                    <label asp-for="Input.Radius"></label>
+                    <select asp-for="Input.Radius">
+                      <option value="10">10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
                 </div>
                 <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>

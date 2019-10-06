@@ -21,7 +21,7 @@ namespace MyHero.Controllers
             notification = new NotificationController(notificationSettingsAccessor);
         }
 
-        public ICollection<Hero> GetHeros(ApplicationUser _user)
+        public List<Hero> GetHeros(ApplicationUser _user)
         {
             // Fetch User Location
             double? lat = _user.Requestor.Latitude;

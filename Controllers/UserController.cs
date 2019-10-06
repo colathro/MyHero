@@ -81,5 +81,18 @@ namespace MyHero.Controllers
                 dbcontext.SaveChanges();
             }
         }
+
+        public Task<bool> SendRequest(int heroId)
+        {
+            //var request = new Request()
+            //{
+            //    Requestor = new Requestor()
+            //    {
+            //        r
+            //    }
+            //}
+
+            return Task.FromResult(true);
+        }
     }
 }
