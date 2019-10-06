@@ -48,6 +48,12 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Location")]
             public string Location { get; set; }
 
+            [Display(Name = "Longitude")]
+            public double Longitude { get; set; }
+
+            [Display(Name = "Latitude")]
+            public double Latitude { get; set; }
+
             [Display(Name = "Description")]
             public string Description { get; set; }
 
@@ -139,6 +145,8 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
             her.Radius = Int32.Parse(this.Input.Radius);
             her.Location = this.Input.Location;
             her.Description = this.Input.Description;
+            her.Latitude = this.Input.Latitude;
+            her.Longitude = this.Input.Longitude;
             _dbContext.SaveChanges();
         }
 
@@ -149,6 +157,8 @@ namespace MyHero.Areas.Identity.Pages.Account.Manage
 
             this.Input.Radius = her.Radius.ToString();
             this.Input.Location = her.Location;
+            this.Input.Latitude = her.Latitude;
+            this.Input.Latitude = her.Longitude;
             this.Input.Description = her.Description;
         }
     }
