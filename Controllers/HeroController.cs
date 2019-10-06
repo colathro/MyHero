@@ -65,5 +65,11 @@ namespace MyHero.Controllers
             dbcontext.SaveChanges();
             return Task.FromResult(true);
         }
+
+        public Hero GetHeroById(int id)
+        {
+            Hero ret = dbcontext.Hero.Where(e => e.Id == id).FirstOrDefault();
+            return ret;
+        }
     }
 }
