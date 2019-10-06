@@ -24,13 +24,28 @@
 
   <ItemGroup>
     <Folder Include="Data\Entities\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\stock\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Models\HeroModel.cs" />
     <Compile Remove="Models\RequesterModel.cs" />
+    <Compile Remove="System\Drawing\Common.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\images\AdobeStock_272779649.jpeg" />
+    <Content Remove="wwwroot\stock\AdobeStock_209442433_Preview.jpeg" />
+    <Content Remove="wwwroot\stock\AdobeStock_284291842_Preview.jpeg" />
+    <Content Remove="wwwroot\stock\AdobeStock_107841841_Preview.jpeg" />
+    <Content Remove="wwwroot\stock\AdobeStock_83241176_Preview.jpeg" />
+    <Content Remove="wwwroot\stock\AdobeStock_208477258_Preview.jpeg" />
+    <Content Remove="wwwroot\stock\AdobeStock_263675781_Preview.jpeg" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Pages\DemoData.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Pages\MyRequests.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
