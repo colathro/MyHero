@@ -64,6 +64,7 @@ button.accept-policy {
 html {
   position: relative;
   min-height: 100%;
+  font-family: IBM Plex Sans;
 }
 
 body {
