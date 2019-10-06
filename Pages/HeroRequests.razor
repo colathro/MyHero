@@ -7,6 +7,8 @@
 @inject ApplicationDbContext dbcontext;
 @inject IOptions<NotificationSettings> notificationSettings;
 
+<AuthorizeView>
+    <Authorized>
 <div class="container">
 
     <div class="accordion" id="accordionExample">
@@ -112,7 +114,12 @@
 
 
 </div>
-
+    </Authorized>
+    <NotAuthorized>
+        You're not logged in.
+        <meta http-equiv="Refresh" content="3; url=./Identity/Account/Login" />
+    </NotAuthorized>
+</AuthorizeView>
 @code {
     List<Request> Requests;
     List<Request> AcceptedRequests;
