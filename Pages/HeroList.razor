@@ -51,18 +51,14 @@
                             </div>
                             <p class="card-text">@hero.Description</p>
                         </div>
-                        <div class="card-footer">
                             @if (requestor != null)
                             {
-                                <div class="btn-group">
-                                    <button class="btn btn-outline-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
+                                <div class="card-footer">
+                                    <div class="btn-group">
+                                        <button class="btn btn-outline-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
+                                    </div>
                                 </div>
                             }
-                            else
-                            {
-                                <h5>REGISTER TO SEND REQUESTS</h5>
-                            }
-                        </div>
                     </div>
                 </div>
             }
@@ -99,7 +95,10 @@
         Random rand = new Random();
         int x = rand.Next(5);
 
+
         string output = "";
+
+        output += "⭐";
         for (int ctr = 0; ctr <= x - 1; ctr++)
         {
             output += "⭐";
