@@ -18,4 +18,10 @@ namespace MyHero.Models
         public string EmailSender { get; set; }
         public string EmailPassword { get; set; }
     }
+
+    public enum EmailType
+    {
+        RequestedRecived = 1,
+        RequestAccepted = 2
+    }
 }

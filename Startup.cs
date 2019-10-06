@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyHero.Areas.Identity;
 using MyHero.Data;
+using MyHero.Controllers;
+using MyHero.Models;
 
 namespace MyHero
 {
@@ -42,6 +44,13 @@ namespace MyHero
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
+
+            services.AddSingleton<NotificationController>();
+
+            // Notification Settings.
+            var notificationSettingsSection =
+                Configuration.GetSection("NotificationSettings");
+            services.Configure<NotificationSettings>(notificationSettingsSection);
 
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {
