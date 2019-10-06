@@ -9,6 +9,7 @@
 @using System.Collections.Generic;
 @using System.Linq;
 @using System.Threading.Tasks;
+@using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext dbcontext;
 @inject UserManager<ApplicationUser> UserManager
 @inject IOptions<NotificationSettings> notificationSettings;
@@ -41,14 +42,14 @@
                             <h5>@hero.Tags</h5>
                             <div>
                                 <small class="text-muted">@GetSomeRawHtml()</small>
-                            </div> 
+                            </div>
                             <p class="card-text">@hero.Description</p>
                         </div>
-                        <div class="card-footer">                           
+                        <div class="card-footer">
                             <div class="btn-group">
                                 <button class="btn btn-outline-primary" @onclick="() => SendRequest(hero.Id)">Send Request</button>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -62,8 +63,9 @@
 
 @code {
 
-    ApplicationUser user;
+    Requestor requestor;
     List<Hero> Heroes;
+
     string Codename;
 
     [Parameter]
@@ -79,34 +81,37 @@
         return "/heroprofile/" + id.ToString();
     }
 
-    private string RandomStars(){
+    private string RandomStars()
+    {
         Random rand = new Random();
         int x = rand.Next(5);
 
         string output = "";
-        for (int ctr = 0; ctr <= x-1; ctr++)
+        for (int ctr = 0; ctr <= x - 1; ctr++)
         {
             output += "⭐";
         }
         return output;
     }
 
-    public RenderFragment GetSomeRawHtml() {
-      return builder => {
-        builder.AddContent(0, RandomStars());
-      };
+    public RenderFragment GetSomeRawHtml()
+    {
+        return builder =>
+        {
+            builder.AddContent(0, RandomStars());
+        };
     }
 
     private async Task SendRequest(int heroId)
     {
-        var userController = new UserController(dbcontext);
+        var userController = new UserController(dbcontext, notificationSettings);
         await userController.SendRequest(Int32.Parse(Id), heroId);
     }
 
     private async Task SearchHeroes()
     {
         await GetHeroes();
-        Heroes = Heroes.Where(h => h.Tags.Contains(this.Codename)).Select(h => h).ToList();
+        Heroes = Heroes.Where(h => h.Tags.ToLower().Contains(this.Codename.ToLower())).Select(h => h).ToList();
     }
 
     private async Task ClearSeach()

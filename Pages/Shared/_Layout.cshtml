@@ -17,6 +17,11 @@
         navbarHeroList += _requestor.Id.ToString();
         navbarUserRequests += _requestor.Id.ToString();
     }
+    else
+    {
+        navbarHeroList += "0";
+    }
+
     if (_hero != null)
     {
         navbarHeroRequests += _hero.Id.ToString();

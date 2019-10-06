@@ -7,16 +7,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
+using Microsoft.Extensions.Options;
 
 namespace MyHero.Controllers
 {
     public class UserController
     {
         private ApplicationDbContext dbcontext;
+        private NotificationController notification;
 
         public UserController(ApplicationDbContext _dbcontext)
         {
             dbcontext = _dbcontext;
+        }
+
+        public UserController(ApplicationDbContext _dbcontext, IOptions<NotificationSettings> notificationSettingsAccessor)
+        {
+            dbcontext = _dbcontext;
+            notification = new NotificationController(notificationSettingsAccessor);
         }
 
         public Requestor GetRequestor(string _userid)
@@ -85,20 +93,30 @@ namespace MyHero.Controllers
 
         public Task<bool> SendRequest(int requesterId, int heroId)
         {
-            var requester = dbcontext.Requestor.Include(r => r.User).Where(r => r.Id == requesterId).FirstOrDefault();
-            var hero = dbcontext.Hero.Include(h => h.User).Where(h => h.Id == heroId).FirstOrDefault();
-
-            var request = new Request()
+            try
             {
-                Requestor = requester,
-                Hero = hero,
-                DateRequested = DateTime.Now,
-                Status = 0,
-                Description = "Test Description"
-            };
+                var requester = dbcontext.Requestor.Include(r => r.User).Where(r => r.Id == requesterId).FirstOrDefault();
+                var hero = dbcontext.Hero.Include(h => h.User).Where(h => h.Id == heroId).FirstOrDefault();
 
-            dbcontext.Request.Add(request);
-            dbcontext.SaveChanges();
+                var request = new Request()
+                {
+                    Requestor = requester,
+                    Hero = hero,
+                    DateRequested = DateTime.Now,
+                    Status = 0,
+                    Description = "Test Description"
+                };
+
+                dbcontext.Request.Add(request);
+
+                notification.SendRequestAcceptedEmailAsync(request.Requestor.User.FirstName + " " + request.Requestor.User.LastName, request.Requestor.User.Email, request.Hero.User.FirstName + " " + request.Hero.User.LastName, request.Hero.User.Email);
+
+                dbcontext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
             return Task.FromResult(true);
         }

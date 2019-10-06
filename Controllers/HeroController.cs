@@ -28,6 +28,11 @@ namespace MyHero.Controllers
 
         public List<Hero> GetHeros(int requestorId)
         {
+            if(requestorId == 0)
+            {
+                return dbcontext.Hero.Include(h => h.User).ToList();
+            }
+
             var requestor = dbcontext.Requestor.Where(r => r.Id == requestorId).FirstOrDefault();
             //Fetch User Location
             double lat = requestor.Latitude;
@@ -71,7 +76,7 @@ namespace MyHero.Controllers
             request.Status = 1;
             dbcontext.SaveChanges();
 
-            notification.SendRequestAcceptedEmailAsync(request.Hero.User.UserName, request.Hero.User.Email, request.Requestor.User.UserName, request.Requestor.User.Email);
+            notification.SendRequestAcceptedEmailAsync(request.Hero.User.FirstName + " " + request.Hero.User.LastName, request.Hero.User.Email, request.Requestor.User.FirstName + " " + request.Requestor.User.LastName, request.Requestor.User.Email);
 
             return Task.FromResult(true);
         }
