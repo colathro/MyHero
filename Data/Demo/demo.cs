@@ -57,7 +57,7 @@ namespace MyHero.Data.Demo
                 }
                 ApplicationUser ru = new ApplicationUser { UserName = name, Email = name + "@gmail.com", FirstName=first, LastName=last };
                 Context.User.Add(ru);
-                Hero rh = new Hero { User = ru, Longitude = rlng, Latitude = rlat, Location = "Fargo, ND, USA", Phone = "701-321-4567", Tags = tagList, Description = "Hi, I'm Bilbo Baggins. I'm from Middle Earth and am new to Fargo. Looking to do some community service in the area.", Radius = 50 };
+                Hero rh = new Hero { User = ru, Longitude = rlng, Latitude = rlat, Location = "Fargo, ND, USA", Phone = "701-321-4567", Tags = tagList, Description = "Hi, I'm "+ name + ". I'm new to Fargo. Looking to do some community service in the area.", Radius = 50 };
                 Context.Hero.Add(rh);
                 first = names[rnd.Next(0, names.Length - 1)];
                 last = lastn[rnd.Next(0, lastn.Length - 1)];
