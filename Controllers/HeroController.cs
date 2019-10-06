@@ -29,5 +29,28 @@ namespace MyHero.Controllers
 
             //return heros
         }
+
+        public List<Request> GetRequests(int heroId)
+        {
+            var requests = dbcontext.Request.Include(r => r.Hero).Where(r => r.Hero.Id == heroId).Select(r => r).ToList();
+            return requests;
+        }
+
+        public Task<bool> AcceptRequest(int requestId)
+        {
+            var request = dbcontext.Request.Where(r => r.Id == requestId).FirstOrDefault();
+
+            //var name = "testing";
+            //var email = "danieldnds@gmail.com";
+
+            //SendEmail($"Your received a visit request by {name}", BuildRequestReceivedMessage(), name, email);
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> DeclineRequest(int requestId)
+        {
+            //DELETE REQUEST
+            return Task.FromResult(true);
+        }
     }
 }

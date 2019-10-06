@@ -1,0 +1,114 @@
+﻿@page "/herolist"
+
+@using MyHero.Controllers
+@using MyHero.Data
+@inject NotificationController Notification
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-10">
+            <input type="text" placeholder="Search.." @bind="this.Codename" />
+            <button class="btn btn-primary" type="button" @onclick="SearchHeroes">Search</button>
+            <button class="btn btn-secondary" type="button" @onclick="ClearSeach">Clear</button>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var hero in Heroes)
+        {
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <a href="#"><img class="card-img-top" src="https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg" alt=""></a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a href="#">@hero.User.UserName</a>
+                        </h4>
+                        <h5>@hero.Tags</h5>
+                        <p class="card-text">@hero.Description</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                        <button class="btn btn-primary" @onclick="SendEmail">Send Email</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- /.row -->
+
+</div>
+
+@code {
+    List<Hero> Heroes;
+    string Codename;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetHeroes();
+    }
+
+    private async Task SendEmail()
+    {
+        await Notification.SendRequestReceivedEmailAsync();
+    }
+
+    private async Task SearchHeroes()
+    {
+        Heroes = Heroes.Where(h => h.Tags.Contains(this.Codename)).Select(h => h).ToList();
+    }
+
+    private async Task ClearSeach()
+    {
+        Codename = "";
+        await GetHeroes();
+    }
+
+    private async Task GetHeroes()
+    {
+        Heroes = new List<Hero>();
+        Heroes.Add(new Hero
+        {
+            Description = "Description Test",
+            User = new ApplicationUser
+            {
+                UserName = "Daniel Dantas",
+                Email = "danieldnds@gmail.com",
+            },
+            Tags = "Batman/Spiderman"
+        });
+
+        Heroes.Add(new Hero
+        {
+            Description = "Another Test",
+            User = new ApplicationUser
+            {
+                UserName = "Matthew Zent",
+                Email = "matthew@gmail.com"
+            },
+            Tags = "Aquaman/Superman"
+        });
+
+        Heroes.Add(new Hero
+        {
+            Description = "Testing",
+            User = new ApplicationUser
+            {
+                UserName = "Colton",
+                Email = "colton@gmail.com"
+            },
+            Tags = "Flash"
+        });
+
+        Heroes.Add(new Hero
+        {
+            Description = "Testing 123",
+            User = new ApplicationUser
+            {
+                UserName = "Jordan Nelson",
+                Email = "Jordan@gmail.com"
+            },
+            Tags = "Ironman"
+        });
+    }
+}
